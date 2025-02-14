@@ -1,9 +1,15 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { notFound, onError } from "stoker/middlewares";
 
 const app = new OpenAPIHono();
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
+
+app.get();
+
+app.notFound(notFound);
+app.onError(onError);
 
 export default app;
