@@ -1,5 +1,7 @@
 import { selectTasksSchema } from "@/db/schema";
 import { z } from "zod";
+import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { createErrorResponseSchema } from "@/lib/constants";
 
 export const listQuerySchema = z.object({
     limit: z.coerce.number({
@@ -28,3 +30,5 @@ export const listResponseSchema = z.object({
         message: z.string(),
     }),
 });
+
+export const taskNotFoundSchema = createErrorResponseSchema(ZOD_ERROR_TASK_NOT_FOUND);

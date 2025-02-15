@@ -4,8 +4,8 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
-import { notFoundSchema } from "@/lib/constants";
-import { listQuerySchema, listResponseSchema } from "./tasks.schema";
+import { listQuerySchema, listResponseSchema, taskNotFoundSchema } from "./tasks.schema";
+import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 
 const tags = ["Tasks"];
 
@@ -56,8 +56,8 @@ export const getOne = createRoute({
       "The requested task",
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
-      notFoundSchema,
-      "Task not found",
+      taskNotFoundSchema,
+      ZOD_ERROR_TASK_NOT_FOUND.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),
@@ -83,7 +83,7 @@ export const patch = createRoute({
       "The updated task",
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
-      notFoundSchema,
+      taskNotFoundSchema,
       "Task not found",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
@@ -106,7 +106,7 @@ export const remove = createRoute({
       description: "Task deleted",
     },
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
-      notFoundSchema,
+      taskNotFoundSchema,
       "Task not found",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(

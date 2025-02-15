@@ -1,6 +1,5 @@
 import { count, eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
-import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
 import type { AppRouteHandler } from "@/lib/types";
 import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } from "@/routes/tasks/tasks.routes";
@@ -8,6 +7,7 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 import db from "@/db";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
+import { taskNotFound } from "./tasks.constants";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -46,12 +46,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   });
 
   if (!task) {
-    return c.json(
-      {
-        message: HttpStatusPhrases.NOT_FOUND,
-      },
-      HttpStatusCodes.NOT_FOUND,
-    );
+    taskNotFound(c);
   }
 
   return c.json(task, HttpStatusCodes.OK);
@@ -62,6 +57,26 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
   const updates = c.req.valid("json");
 
   if (Object.keys(updates).length === 0) {
+    taskNotFound(c);
+  }
+
+  const [task] = await db.update(tasks)
+    .set(updates)
+    .where(eq(tasks.id, id))
+    .returning();
+  if (!task) {
+    taskNotFound(c);
+  }
+
+  return c.json(task, HttpStatusCodes.OK);
+};
+
+export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
+  const { id } = c.req.valid("param");
+  const result = await db.delete(tasks)
+    .where(eq(tasks.id, id));
+
+  if (result.rowsAffected === 0) {
     return c.json(
       {
         success: false,
@@ -77,37 +92,6 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
         },
       },
       HttpStatusCodes.UNPROCESSABLE_ENTITY,
-    );
-  }
-
-  const [task] = await db.update(tasks)
-    .set(updates)
-    .where(eq(tasks.id, id))
-    .returning();
-
-  if (!task) {
-    return c.json(
-      {
-        message: HttpStatusPhrases.NOT_FOUND,
-      },
-      HttpStatusCodes.NOT_FOUND,
-    );
-  }
-
-  return c.json(task, HttpStatusCodes.OK);
-};
-
-export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
-  const { id } = c.req.valid("param");
-  const result = await db.delete(tasks)
-    .where(eq(tasks.id, id));
-
-  if (result.rowsAffected === 0) {
-    return c.json(
-      {
-        message: HttpStatusPhrases.NOT_FOUND,
-      },
-      HttpStatusCodes.NOT_FOUND,
     );
   }
 
