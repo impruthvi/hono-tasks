@@ -2,7 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { notFound, onError, serveEmojiFavicon } from "stoker/middlewares";
 import { defaultHook } from "stoker/openapi";
 
-import type { AppBindings } from "@/lib/types";
+import type { AppBindings, AppOpenApi } from "@/lib/types";
 
 import { pinoCustomLogger } from "@/middlewares/pino-logger";
 
@@ -23,4 +23,8 @@ export default function createApp() {
   app.onError(onError);
 
   return app;
+}
+
+export function createTestApp<R extends AppOpenApi>(router: R) {
+  return createApp().route("/", router);
 }
