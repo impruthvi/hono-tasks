@@ -20,11 +20,11 @@ export function createListResponse<T>(
   c: Context,
   data: T,
   meta: {
-    limit: number,
-    offset: number,
-    total: number,
-    message: string,
-  }
+    limit: number;
+    offset: number;
+    total: number;
+    message: string;
+  },
 ) {
   return c.json({
     success: true,

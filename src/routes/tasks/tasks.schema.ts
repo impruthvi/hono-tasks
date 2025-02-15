@@ -21,6 +21,4 @@ export const listQuerySchema = z.object({
   }).default(0),
 });
 
-
-
 export const taskNotFoundSchema = createErrorResponseSchema(ZOD_ERROR_TASK_NOT_FOUND);

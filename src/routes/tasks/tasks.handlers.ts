@@ -1,3 +1,5 @@
+import type { RouteConfigToTypedResponse } from "@hono/zod-openapi";
+
 import { count, eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 
@@ -10,7 +12,6 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import { createCreateResponse, createDeleteResponse, createGetOneResponse, createListResponse, createUpdateResponse } from "@/lib/crud-helper";
 
 import { TASK_CREATE, TASK_DELETE, TASK_GET_ONE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
-import { RouteConfigToTypedResponse } from "@hono/zod-openapi";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
