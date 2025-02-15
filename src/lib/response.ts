@@ -16,36 +16,18 @@ type ErrorResponse = {
     name: string;
   };
 };
-
-const ZodErrorResponseSchema = z.object({
-  success: z.literal(false),
-  error: z.object({
-    issues: z.array(
-      z.object({
-        code: z.string(),
-        path: z.array(z.string()),
-        message: z.string(),
-      })
-    ),
-    name: z.literal("ZodError"), // Ensure this is correctly typed
-  }),
-});
-
-type ZodErrorResponse = z.infer<typeof ZodErrorResponseSchema>;
-
-
 /**
  * Creates a standardized "not found" error response
  * @param c - Hono Context
  * @param errorCode - Error code constant containing code, path, and message
- * @param status - HTTP status code (defaults to 404 Not Found)
+ * @param status - HTTP status code (defaults to 422 UNPROCESSABLE_ENTITY)
  */
-export function createNotFoundError(
-  c: Context,
-  errorCode: { code: string; path: string[]; message: string },
-  status: ContentfulStatusCode = HttpStatusCodes.NOT_FOUND as ContentfulStatusCode
-) {
-  const errorResponse: ZodErrorResponse = {
+export function createNotFoundError(c: Context, errorCode: {
+  code: string;
+  path: string[];
+  message: string;
+}, status: ContentfulStatusCode = HttpStatusCodes.NOT_FOUND as ContentfulStatusCode) {
+  const errorResponse: ErrorResponse = {
     success: false,
     error: {
       issues: [
