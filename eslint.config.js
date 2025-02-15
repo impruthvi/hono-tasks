@@ -12,6 +12,9 @@ export default antfu({
     semi: true,
     quotes: "double",
   },
+  ignores: [
+    "src/db/migrations",
+  ],
 }, {
   rules: {
     "ts/consistent-type-definitions": ["error", "type"],

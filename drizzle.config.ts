@@ -1,15 +1,16 @@
-import env from '@/env';
-import { config } from 'dotenv';
-import { defineConfig } from 'drizzle-kit';
+import { config } from "dotenv";
+import { defineConfig } from "drizzle-kit";
 
-config({ path: '.env' });
+import env from "@/env";
+
+config({ path: ".env" });
 
 export default defineConfig({
-    schema: './src/db/schema.ts',
-    out: './src/db/migrations',
-    dialect: 'sqlite',
-    dbCredentials: {
-        url: env.DATABASE_URL,
-        
-    },
+  schema: "./src/db/schema.ts",
+  out: "./src/db/migrations",
+  dialect: "sqlite",
+  dbCredentials: {
+    url: env.DATABASE_URL,
+
+  },
 });
