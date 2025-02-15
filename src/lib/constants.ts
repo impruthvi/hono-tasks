@@ -30,7 +30,7 @@ type ErrorResponse = {
 /**
  * Creates a standardized "not found" error response
  * @param c - Hono Context
- * @param errorCode - Error code constant containing code, path, and message 
+ * @param errorCode - Error code constant containing code, path, and message
  * @param status - HTTP status code (defaults to 422 UNPROCESSABLE_ENTITY)
  */
 export function createNotFoundError(c: Context, errorCode: {
@@ -58,7 +58,7 @@ export function createNotFoundError(c: Context, errorCode: {
 /**
  * Creates a standardized Zod error response schema
  * @param errorCode - Error code constant containing code and message
- * 
+ *
  * @returns Zod schema for the error response
  */
 export function createErrorResponseSchema(errorCode: {
@@ -90,7 +90,7 @@ export function createCreateRoute(
     meta: z.object({
       message: z.literal(message),
     }),
-  })
+  });
 }
 
 export function createCreateResponse<T>(c: Context, data: T, message: string) {
