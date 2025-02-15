@@ -6,9 +6,10 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 
 import db from "@/db";
 import { tasks } from "@/db/schema";
-import { createCreateResponse, ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
+import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
-import { TASK_CREATE, taskNotFound } from "./tasks.constants";
+import { TASK_CREATE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
+import { createCreateResponse, createUpdateResponse } from "@/lib/crud-helper";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -58,7 +59,22 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
   const updates = c.req.valid("json");
 
   if (Object.keys(updates).length === 0) {
-    taskNotFound(c);
+    return c.json(
+      {
+        success: false,
+        error: {
+          issues: [
+            {
+              code: ZOD_ERROR_CODES.INVALID_UPDATES,
+              path: [],
+              message: ZOD_ERROR_MESSAGES.NO_UPDATES,
+            },
+          ],
+          name: "ZodError",
+        },
+      },
+      HttpStatusCodes.UNPROCESSABLE_ENTITY,
+    );
   }
 
   const [task] = await db.update(tasks)
@@ -69,7 +85,7 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
     taskNotFound(c);
   }
 
-  return c.json(task, HttpStatusCodes.OK);
+  return createUpdateResponse<typeof task>(c, task, TASK_UPDATE.message);
 };
 
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {

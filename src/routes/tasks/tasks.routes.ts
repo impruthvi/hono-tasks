@@ -4,10 +4,10 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
-import { createCreateRoute } from "@/lib/constants";
 
-import { TASK_CREATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_CREATE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 import { listQuerySchema, listResponseSchema, taskNotFoundSchema } from "./tasks.schema";
+import { createCreateRoute, createUpdateResponse, createUpdateRoute } from "@/lib/crud-helper";
 
 const tags = ["Tasks"];
 
@@ -81,8 +81,8 @@ export const patch = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      selectTasksSchema,
-      "The updated task",
+      createUpdateRoute(selectTasksSchema, TASK_UPDATE.message),
+      TASK_UPDATE.message,
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,

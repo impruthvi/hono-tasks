@@ -14,3 +14,8 @@ export const TASK_CREATE = {
   code: "task_create",
   message: "Task created successfully",
 };
+
+export const TASK_UPDATE = {
+  code: "task_update",
+  message: "Task updated successfully",
+};
