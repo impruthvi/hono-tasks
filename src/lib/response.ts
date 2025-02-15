@@ -20,6 +20,9 @@ type ErrorResponse = {
  * Creates a standardized "not found" error response
  * @param c - Hono Context
  * @param errorCode - Error code constant containing code, path, and message
+ * @param errorCode.code - Error code
+ * @param errorCode.path - Path to the error
+ * @param errorCode.message - Error message
  * @param status - HTTP status code (defaults to 402 Not Found)
  */
 export function createNotFoundError(c: Context, errorCode: {
@@ -47,6 +50,8 @@ export function createNotFoundError(c: Context, errorCode: {
 /**
  * Creates a standardized Zod error response schema
  * @param errorCode - Error code constant containing code and message
+ * @param errorCode.code - Error code
+ * @param errorCode.message - Error message
  *
  * @returns Zod schema for the error response
  */
