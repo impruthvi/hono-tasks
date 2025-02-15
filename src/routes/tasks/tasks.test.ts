@@ -20,7 +20,7 @@ const client = testClient(createApp().route("/", router));
 
 describe("tasks routes", () => {
   beforeAll(async () => {
-    execSync("pnpm drizzle-kit push");
+    execSync("bun drizzle-kit push");
   });
 
   afterAll(async () => {
@@ -113,8 +113,8 @@ describe("tasks routes", () => {
     expect(response.status).toBe(200);
     if (response.status === 200) {
       const json = await response.json();
-      expect(json.name).toBe(name);
-      expect(json.done).toBe(false);
+      expect(json.data.name).toBe(name);
+      expect(json.data.done).toBe(false);
     }
   });
 
