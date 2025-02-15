@@ -6,7 +6,7 @@
     "dev": "tsx watch src/index.ts",
     "lint": "eslint .",
     "lint:fix": "bun run lint --fix",
-    "test": "vitest"
+    "test": "cross-env NODE_ENV=test vitest"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.0",
     "@types/node": "^20.11.17",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.30.4",
     "eslint": "^9.20.0",
     "eslint-plugin-format": "^1.0.1",
