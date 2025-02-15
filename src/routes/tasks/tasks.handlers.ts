@@ -10,7 +10,12 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import { eq } from "drizzle-orm";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
-  const tasks = await db.query.tasks.findMany();
+  const { limit, offset } = c.req.valid("query");
+
+  const tasks = await db.query.tasks.findMany({
+    limit,
+    offset,
+  });
   return c.json(tasks);
 };
 

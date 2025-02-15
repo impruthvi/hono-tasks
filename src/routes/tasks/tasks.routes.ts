@@ -12,6 +12,12 @@ export const list = createRoute({
   tags,
   path: "/tasks",
   method: "get",
+  request: {
+    query: z.object({
+      limit: z.coerce.number().int().positive().default(10),
+      offset: z.coerce.number().int().nonnegative().default(0),
+    }),
+  },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       z.array(selectTasksSchema),
