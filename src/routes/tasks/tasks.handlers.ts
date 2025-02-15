@@ -20,11 +20,13 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
   const [total] = await db.select({ count: count() }).from(tasks);
 
   return c.json({
+    success: true,
     data: paginatedTask,
     meta: {
       limit,
       offset,
       total: total.count,
+      message: "Tasks fetched successfully",
     },
   });
 };

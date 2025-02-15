@@ -5,6 +5,7 @@ import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
 import { notFoundSchema } from "@/lib/constants";
+import { listQuerySchema, listResponseSchema } from "./tasks.schema";
 
 const tags = ["Tasks"];
 
@@ -13,21 +14,11 @@ export const list = createRoute({
   path: "/tasks",
   method: "get",
   request: {
-    query: z.object({
-      limit: z.coerce.number().int().positive().default(10),
-      offset: z.coerce.number().int().nonnegative().default(0),
-    }),
+    query: listQuerySchema,
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      z.object({
-        data: z.array(selectTasksSchema),
-        meta: z.object({
-          limit: z.number(),
-          offset: z.number(),
-          total: z.number(),
-        }),
-      }),
+      listResponseSchema,
       "List of tasks",
     ),
   },
