@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { selectTasksSchema } from "@/db/schema";
 import { createErrorResponseSchema } from "@/lib/response";
 
 import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
@@ -22,15 +21,6 @@ export const listQuerySchema = z.object({
   }).default(0),
 });
 
-export const listResponseSchema = z.object({
-  success: z.literal(true),
-  data: z.array(selectTasksSchema),
-  meta: z.object({
-    limit: z.number(),
-    offset: z.number(),
-    total: z.number(),
-    message: z.string(),
-  }),
-});
+
 
 export const taskNotFoundSchema = createErrorResponseSchema(ZOD_ERROR_TASK_NOT_FOUND);

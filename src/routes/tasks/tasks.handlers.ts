@@ -7,7 +7,7 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 import db from "@/db";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
-import { createCreateResponse, createDeleteResponse, createUpdateResponse } from "@/lib/crud-helper";
+import { createCreateResponse, createDeleteResponse, createListResponse, createUpdateResponse } from "@/lib/crud-helper";
 
 import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
 import { RouteConfigToTypedResponse } from "@hono/zod-openapi";
@@ -22,15 +22,11 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 
   const [total] = await db.select({ count: count() }).from(tasks);
 
-  return c.json({
-    success: true,
-    data: paginatedTask,
-    meta: {
-      limit,
-      offset,
-      total: total.count,
-      message: "Tasks fetched successfully",
-    },
+  return createListResponse<typeof paginatedTask>(c, paginatedTask, {
+    limit,
+    offset,
+    total: total.count,
+    message: TASK_CREATE.message,
   });
 };
 
