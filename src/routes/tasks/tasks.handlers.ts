@@ -10,6 +10,7 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import { createCreateResponse, createDeleteResponse, createUpdateResponse } from "@/lib/crud-helper";
 
 import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
+import { RouteConfigToTypedResponse } from "@hono/zod-openapi";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -48,7 +49,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
   });
 
   if (!task) {
-    taskNotFound(c);
+    return taskNotFound(c) as RouteConfigToTypedResponse<GetOneRoute>;
   }
 
   return c.json(task, HttpStatusCodes.OK);
@@ -82,7 +83,7 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
     .where(eq(tasks.id, id))
     .returning();
   if (!task) {
-    taskNotFound(c);
+    return taskNotFound(c) as RouteConfigToTypedResponse<PatchRoute>;
   }
 
   return createUpdateResponse<typeof task>(c, task, TASK_UPDATE.message);
