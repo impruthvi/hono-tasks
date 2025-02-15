@@ -11,7 +11,7 @@ import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import { createCreateResponse, createDeleteResponse, createGetOneResponse, createListResponse, createUpdateResponse } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_DELETE, TASK_GET_ONE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
+import { TASK_MESSAGES, taskNotFound } from "./tasks.constants";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -27,14 +27,14 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     limit,
     offset,
     total: total.count,
-    message: TASK_CREATE.message,
+    message: TASK_MESSAGES.LIST.message,
   });
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
   const task = c.req.valid("json");
   const [inserted] = await db.insert(tasks).values(task).returning();
-  return createCreateResponse<typeof inserted>(c, inserted, TASK_CREATE.message);
+  return createCreateResponse<typeof inserted>(c, inserted, TASK_MESSAGES.CREATE.message);
 };
 
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
@@ -49,7 +49,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
     return taskNotFound(c) as RouteConfigToTypedResponse<GetOneRoute>;
   }
 
-  return createGetOneResponse<typeof task>(c, task, TASK_GET_ONE.message);
+  return createGetOneResponse<typeof task>(c, task, TASK_MESSAGES.GET_ONE.message);
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {
@@ -83,7 +83,7 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
     return taskNotFound(c) as RouteConfigToTypedResponse<PatchRoute>;
   }
 
-  return createUpdateResponse<typeof task>(c, task, TASK_UPDATE.message);
+  return createUpdateResponse<typeof task>(c, task, TASK_MESSAGES.UPDATE.message);
 };
 
 export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
@@ -110,5 +110,5 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
     );
   }
 
-  return createDeleteResponse(c, TASK_DELETE.message);
+  return createDeleteResponse(c, TASK_MESSAGES.DELETE.message);
 };

@@ -6,7 +6,7 @@ import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
 import { createCreateRoute, createDeleteRoute, createGetOneRoute, createListRoute, createUpdateRoute } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_DELETE, TASK_GET_ONE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_MESSAGES, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 import { listQuerySchema, taskNotFoundSchema } from "./tasks.schema";
 
 const tags = ["Tasks"];
@@ -35,8 +35,8 @@ export const create = createRoute({
   },
   responses: {
     [HttpStatusCodes.CREATED]: jsonContent(
-      createCreateRoute(selectTasksSchema, TASK_CREATE.message),
-      TASK_CREATE.message,
+      createCreateRoute(selectTasksSchema, TASK_MESSAGES.CREATE.message),
+      TASK_MESSAGES.CREATE.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertTasksSchema),
@@ -55,7 +55,7 @@ export const getOne = createRoute({
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
       createGetOneRoute(selectTasksSchema),
-      TASK_GET_ONE.message,
+      TASK_MESSAGES.GET_ONE.message,
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
@@ -75,14 +75,14 @@ export const patch = createRoute({
     params: IdParamsSchema,
     body: jsonContentRequired(
       patchTasksSchema,
-      TASK_UPDATE.message,
+      TASK_MESSAGES.UPDATE.message,
     ),
   },
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      createUpdateRoute(selectTasksSchema, TASK_UPDATE.message),
-      TASK_UPDATE.message,
+      createUpdateRoute(selectTasksSchema, TASK_MESSAGES.UPDATE.message),
+      TASK_MESSAGES.UPDATE.message,
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
@@ -105,8 +105,8 @@ export const remove = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.ACCEPTED]: jsonContent(
-      createDeleteRoute(TASK_DELETE.message),
-      TASK_DELETE.message,
+      createDeleteRoute(TASK_MESSAGES.DELETE.message),
+      TASK_MESSAGES.DELETE.message,
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
