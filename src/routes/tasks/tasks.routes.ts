@@ -4,9 +4,9 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
-import { createCreateRoute, createDeleteRoute, createListRoute, createUpdateRoute } from "@/lib/crud-helper";
+import { createCreateRoute, createDeleteRoute, createGetOneRoute, createListRoute, createUpdateRoute } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_CREATE, TASK_DELETE, TASK_GET_ONE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 import { listQuerySchema, taskNotFoundSchema } from "./tasks.schema";
 
 const tags = ["Tasks"];
@@ -54,8 +54,8 @@ export const getOne = createRoute({
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      selectTasksSchema,
-      "The requested task",
+      createGetOneRoute(selectTasksSchema),
+      TASK_GET_ONE.message,
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
@@ -75,7 +75,7 @@ export const patch = createRoute({
     params: IdParamsSchema,
     body: jsonContentRequired(
       patchTasksSchema,
-      "The task updates",
+      TASK_UPDATE.message,
     ),
   },
   tags,
@@ -86,7 +86,7 @@ export const patch = createRoute({
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
-      "Task not found",
+      ZOD_ERROR_TASK_NOT_FOUND.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(patchTasksSchema)
@@ -110,7 +110,7 @@ export const remove = createRoute({
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
-      "Task not found",
+      ZOD_ERROR_TASK_NOT_FOUND.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),

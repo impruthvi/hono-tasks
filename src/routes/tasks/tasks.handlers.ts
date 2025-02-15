@@ -7,9 +7,9 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 import db from "@/db";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
-import { createCreateResponse, createDeleteResponse, createListResponse, createUpdateResponse } from "@/lib/crud-helper";
+import { createCreateResponse, createDeleteResponse, createGetOneResponse, createListResponse, createUpdateResponse } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
+import { TASK_CREATE, TASK_DELETE, TASK_GET_ONE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
 import { RouteConfigToTypedResponse } from "@hono/zod-openapi";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
@@ -48,7 +48,7 @@ export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
     return taskNotFound(c) as RouteConfigToTypedResponse<GetOneRoute>;
   }
 
-  return c.json(task, HttpStatusCodes.OK);
+  return createGetOneResponse<typeof task>(c, task, TASK_GET_ONE.message);
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {

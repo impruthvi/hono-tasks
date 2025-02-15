@@ -33,6 +33,26 @@ export function createListResponse<T>(
   }, HttpStatusCodes.OK);
 }
 
+export function createGetOneRoute(data: z.ZodSchema<any>) {
+  return z.object({
+    success: z.literal(true),
+    data,
+    meta: z.object({
+      message: z.string(),
+    }),
+  });
+}
+
+export function createGetOneResponse<T>(c: Context, data: T, message: string) {
+  return c.json({
+    success: true,
+    data,
+    meta: {
+      message,
+    },
+  }, HttpStatusCodes.OK);
+}
+
 export function createCreateRoute(
   data: z.ZodSchema<any>,
   message: string,

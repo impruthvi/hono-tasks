@@ -24,3 +24,13 @@ export const TASK_DELETE = {
   code: "task_delete",
   message: "Task deleted successfully",
 };
+
+export const TASK_LIST = {
+  code: "task_list",
+  message: "Tasks listed successfully",
+};
+
+export const TASK_GET_ONE = {
+  code: "task_get_one",
+  message: "Task retrieved successfully",
+};
