@@ -9,3 +9,8 @@ export const ZOD_ERROR_TASK_NOT_FOUND = {
 };
 
 export const taskNotFound = (c: Context) => createNotFoundError(c, ZOD_ERROR_TASK_NOT_FOUND);
+
+export const TASK_CREATE = {
+  code: "task_create",
+  message: "Task created successfully",
+};

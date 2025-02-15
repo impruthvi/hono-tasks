@@ -5,8 +5,9 @@ import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
 
-import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_CREATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 import { listQuerySchema, listResponseSchema, taskNotFoundSchema } from "./tasks.schema";
+import { createCreateRoute } from "@/lib/constants";
 
 const tags = ["Tasks"];
 
@@ -34,8 +35,8 @@ export const create = createRoute({
   },
   responses: {
     [HttpStatusCodes.CREATED]: jsonContent(
-      selectTasksSchema,
-      "The created task",
+      createCreateRoute(selectTasksSchema, TASK_CREATE.message),
+      TASK_CREATE.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertTasksSchema),

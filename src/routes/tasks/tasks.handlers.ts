@@ -6,9 +6,9 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 
 import db from "@/db";
 import { tasks } from "@/db/schema";
-import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
+import { createCreateResponse, ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
-import { taskNotFound } from "./tasks.constants";
+import { TASK_CREATE, taskNotFound } from "./tasks.constants";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -35,7 +35,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 export const create: AppRouteHandler<CreateRoute> = async (c) => {
   const task = c.req.valid("json");
   const [inserted] = await db.insert(tasks).values(task).returning();
-  return c.json(inserted, HttpStatusCodes.CREATED);
+  return createCreateResponse<typeof inserted>(c, inserted, TASK_CREATE.message);
 };
 
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
