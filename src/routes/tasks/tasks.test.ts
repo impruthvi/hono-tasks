@@ -11,6 +11,7 @@ import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import createApp from "@/lib/create-app";
 
 import router from "./tasks.index";
+import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
@@ -55,18 +56,23 @@ describe("tasks routes", () => {
     expect(response.status).toBe(201);
     if (response.status === 201) {
       const json = await response.json();
-      expect(json.name).toBe(name);
-      expect(json.done).toBe(false);
+      expect(json.data.name).toBe(name);
+      expect(json.data.done).toBe(false);
     }
   });
 
   it("get /tasks lists all tasks", async () => {
-    const response = await client.tasks.$get();
+    const response = await client.tasks.$get({
+      query: {
+        limit: 10,
+        offset: 0,
+      },
+    });
     expect(response.status).toBe(200);
     if (response.status === 200) {
       const json = await response.json();
-      expectTypeOf(json).toBeArray();
-      expect(json.length).toBe(1);
+      expectTypeOf(json.data).toBeArray();
+      expect(json.data.length).toBe(1);
     }
   });
 
@@ -88,13 +94,14 @@ describe("tasks routes", () => {
   it("get /tasks/{id} returns 404 when task not found", async () => {
     const response = await client.tasks[":id"].$get({
       param: {
-        id: 999,
+        id: 1000,
       },
     });
+
     expect(response.status).toBe(404);
     if (response.status === 404) {
       const json = await response.json();
-      expect(json.message).toBe(HttpStatusPhrases.NOT_FOUND);
+      expect(json.error.issues[0].message).toBe(ZOD_ERROR_TASK_NOT_FOUND.message);
     }
   });
 
@@ -172,7 +179,7 @@ describe("tasks routes", () => {
     expect(response.status).toBe(200);
     if (response.status === 200) {
       const json = await response.json();
-      expect(json.done).toBe(true);
+      expect(json.data.done).toBe(true);
     }
   });
 
@@ -197,6 +204,6 @@ describe("tasks routes", () => {
         id,
       },
     });
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(202);
   });
 });
