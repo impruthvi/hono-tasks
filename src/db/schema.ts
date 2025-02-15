@@ -28,7 +28,7 @@ export const insertTasksSchema = createInsertSchema(
   },
 )
   .required({
-    done: true
+    done: true,
   })
   .omit({
     id: true,
@@ -38,7 +38,7 @@ export const insertTasksSchema = createInsertSchema(
   .extend({
     done: z.boolean({
       required_error: "Done status is required",
-      invalid_type_error: "Done must be a boolean value"
-    })
+      invalid_type_error: "Done must be a boolean value",
+    }),
   });
 export const patchTasksSchema = insertTasksSchema.partial();
