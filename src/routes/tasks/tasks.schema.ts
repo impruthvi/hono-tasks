@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { selectTasksSchema } from "@/db/schema";
-import { createErrorResponseSchema } from "@/lib/constants";
+import { createErrorResponseSchema } from "@/lib/response";
 
 import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 

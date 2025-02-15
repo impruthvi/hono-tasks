@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 
-import { createNotFoundError } from "@/lib/constants";
+import { createNotFoundError } from "@/lib/response";
 
 export const ZOD_ERROR_TASK_NOT_FOUND = {
   code: "task_not_found",
