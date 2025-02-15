@@ -19,3 +19,8 @@ export const TASK_UPDATE = {
   code: "task_update",
   message: "Task updated successfully",
 };
+
+export const TASK_DELETE = {
+  code: "task_delete",
+  message: "Task deleted successfully",
+};

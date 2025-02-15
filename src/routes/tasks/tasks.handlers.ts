@@ -7,9 +7,9 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 import db from "@/db";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
-import { createCreateResponse, createUpdateResponse } from "@/lib/crud-helper";
+import { createCreateResponse, createDeleteResponse, createUpdateResponse } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
+import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, taskNotFound } from "./tasks.constants";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
@@ -112,5 +112,5 @@ export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
     );
   }
 
-  return c.body(null, HttpStatusCodes.NO_CONTENT);
+  return createDeleteResponse(c, TASK_DELETE.message);
 };

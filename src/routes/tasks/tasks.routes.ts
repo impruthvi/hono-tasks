@@ -4,9 +4,9 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
-import { createCreateRoute, createUpdateRoute } from "@/lib/crud-helper";
+import { createCreateRoute, createDeleteRoute, createUpdateRoute } from "@/lib/crud-helper";
 
-import { TASK_CREATE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_CREATE, TASK_DELETE, TASK_UPDATE, ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
 import { listQuerySchema, listResponseSchema, taskNotFoundSchema } from "./tasks.schema";
 
 const tags = ["Tasks"];
@@ -104,9 +104,10 @@ export const remove = createRoute({
   },
   tags,
   responses: {
-    [HttpStatusCodes.NO_CONTENT]: {
-      description: "Task deleted",
-    },
+    [HttpStatusCodes.ACCEPTED]: jsonContent(
+      createDeleteRoute(TASK_DELETE.message),
+      TASK_DELETE.message,
+    ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
       "Task not found",

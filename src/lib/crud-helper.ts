@@ -48,3 +48,21 @@ export function createUpdateResponse<T>(c: Context, data: T, message: string) {
     },
   }, HttpStatusCodes.OK);
 }
+
+export function createDeleteRoute(message: string) {
+  return z.object({
+    success: z.literal(true),
+    meta: z.object({
+      message: z.literal(message),
+    }),
+  });
+}
+
+export function createDeleteResponse(c: Context, message: string) {
+  return c.json({
+    success: true,
+    meta: {
+      message,
+    },
+  }, HttpStatusCodes.ACCEPTED);
+}
