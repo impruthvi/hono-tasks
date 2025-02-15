@@ -20,7 +20,7 @@ type ErrorResponse = {
  * Creates a standardized "not found" error response
  * @param c - Hono Context
  * @param errorCode - Error code constant containing code, path, and message
- * @param status - HTTP status code (defaults to 422 UNPROCESSABLE_ENTITY)
+ * @param status - HTTP status code (defaults to 402 Not Found)
  */
 export function createNotFoundError(c: Context, errorCode: {
   code: string;
