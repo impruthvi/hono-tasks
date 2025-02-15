@@ -3,10 +3,10 @@ import type { Context } from "hono";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { z } from "zod";
 
-export function createListRoute(data: z.ZodSchema<any>) {
+export function createListRoute<T extends z.ZodTypeAny>(data: T) {
   return z.object({
     success: z.literal(true),
-    data,
+    data: z.array(data),
     meta: z.object({
       limit: z.number(),
       offset: z.number(),
