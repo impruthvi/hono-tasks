@@ -9,7 +9,7 @@ import env from "@/env";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import createApp from "@/lib/create-app";
 
-import { ZOD_ERROR_TASK_NOT_FOUND } from "./tasks.constants";
+import { TASK_MESSAGES } from "./tasks.constants";
 import router from "./tasks.index";
 
 if (env.NODE_ENV !== "test") {
@@ -100,7 +100,7 @@ describe("tasks routes", () => {
     expect(response.status).toBe(404);
     if (response.status === 404) {
       const json = await response.json();
-      expect(json.error.issues[0].message).toBe(ZOD_ERROR_TASK_NOT_FOUND.message);
+      expect(json.error.issues[0].message).toBe(TASK_MESSAGES.NOT_FOUND.message);
     }
   });
 
