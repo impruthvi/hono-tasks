@@ -1,3 +1,4 @@
+import { count, eq } from "drizzle-orm";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import * as HttpStatusPhrases from "stoker/http-status-phrases";
 
@@ -7,16 +8,25 @@ import type { CreateRoute, GetOneRoute, ListRoute, PatchRoute, RemoveRoute } fro
 import db from "@/db";
 import { tasks } from "@/db/schema";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
-import { eq } from "drizzle-orm";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { limit, offset } = c.req.valid("query");
 
-  const tasks = await db.query.tasks.findMany({
+  const paginatedTask = await db.query.tasks.findMany({
     limit,
     offset,
   });
-  return c.json(tasks);
+
+  const [total] = await db.select({ count: count() }).from(tasks);
+
+  return c.json({
+    data: paginatedTask,
+    meta: {
+      limit,
+      offset,
+      total: total.count,
+    },
+  });
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {

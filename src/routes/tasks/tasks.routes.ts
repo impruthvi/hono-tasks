@@ -20,7 +20,14 @@ export const list = createRoute({
   },
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      z.array(selectTasksSchema),
+      z.object({
+        data: z.array(selectTasksSchema),
+        meta: z.object({
+          limit: z.number(),
+          offset: z.number(),
+          total: z.number(),
+        }),
+      }),
       "List of tasks",
     ),
   },
