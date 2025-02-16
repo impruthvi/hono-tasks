@@ -25,7 +25,7 @@ type ErrorResponse = {
  * @param errorCode.message - Error message
  * @param status - HTTP status code (defaults to 402 Not Found)
  */
-export function createNotFoundError(c: Context, errorCode: {
+export function createErrorResponse(c: Context, errorCode: {
   code: string;
   path: string[];
   message: string;

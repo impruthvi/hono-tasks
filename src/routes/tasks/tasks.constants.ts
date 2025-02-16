@@ -1,8 +1,8 @@
 import type { Context } from "hono";
 
-import { createNotFoundError } from "@/lib/response";
+import { createErrorResponse } from "@/lib/response";
 
-export const taskNotFound = (c: Context) => createNotFoundError(c, TASK_MESSAGES.NOT_FOUND);
+export const taskNotFound = (c: Context) => createErrorResponse(c, TASK_MESSAGES.NOT_FOUND);
 
 export const TASK_MESSAGES = {
   NOT_FOUND: {
