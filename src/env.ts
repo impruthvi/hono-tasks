@@ -18,6 +18,8 @@ const EnvSchema = z.object({
   JWT_SECRET_KEY: z.string(),
   DATABASE_URL: z.string().url(),
   DATABASE_AUTH_TOKEN: z.string().optional(),
+  JWT_EXPIRES_IN: z.union([z.string(), z.number()]).default("1d"),
+  JWT_ISSUER: z.string().default("task-manager"),
 }).superRefine((input, ctx) => {
   if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
