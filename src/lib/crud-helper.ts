@@ -2,6 +2,7 @@ import type { Context } from "hono";
 
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { z } from "zod";
+import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "./constants";
 
 export function createListRoute<T extends z.ZodTypeAny>(data: T) {
   return z.object({
@@ -116,3 +117,16 @@ export function createDeleteResponse(c: Context, message: string) {
     },
   }, HttpStatusCodes.ACCEPTED);
 }
+
+
+export const unauthorizedErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    issues: z.array(z.object({
+      code: z.literal(ZOD_ERROR_CODES.INVALID_TOKEN),
+      path: z.array(z.string()),
+      message: z.literal(ZOD_ERROR_MESSAGES.UNAUTHORIZED),
+    })),
+    name: z.literal('ZodError')
+  })
+});

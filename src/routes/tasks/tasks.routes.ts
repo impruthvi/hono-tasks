@@ -4,10 +4,11 @@ import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
 import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
 
 import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema";
-import { createCreateRoute, createDeleteRoute, createGetOneRoute, createListRoute, createUpdateRoute } from "@/lib/crud-helper";
+import { createCreateRoute, createDeleteRoute, createGetOneRoute, createListRoute, createUpdateRoute, unauthorizedErrorSchema } from "@/lib/crud-helper";
 
 import { TASK_MESSAGES } from "./tasks.constants";
 import { listQuerySchema, taskNotFoundSchema } from "./tasks.schema";
+import { ZOD_ERROR_MESSAGES } from "@/lib/constants";
 
 const tags = ["Tasks"];
 
@@ -23,6 +24,10 @@ export const list = createRoute({
       createListRoute(selectTasksSchema),
       "List of tasks",
     ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      unauthorizedErrorSchema,
+      ZOD_ERROR_MESSAGES.UNAUTHORIZED,
+    ),
   },
 });
 
@@ -37,6 +42,10 @@ export const create = createRoute({
     [HttpStatusCodes.CREATED]: jsonContent(
       createCreateRoute(selectTasksSchema, TASK_MESSAGES.CREATE.message),
       TASK_MESSAGES.CREATE.message,
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      unauthorizedErrorSchema,
+      ZOD_ERROR_MESSAGES.UNAUTHORIZED,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertTasksSchema),
@@ -60,6 +69,10 @@ export const getOne = createRoute({
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
       TASK_MESSAGES.NOT_FOUND.message,
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      unauthorizedErrorSchema,
+      ZOD_ERROR_MESSAGES.UNAUTHORIZED,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),
@@ -88,6 +101,10 @@ export const patch = createRoute({
       taskNotFoundSchema,
       TASK_MESSAGES.NOT_FOUND.message,
     ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      unauthorizedErrorSchema,
+      ZOD_ERROR_MESSAGES.UNAUTHORIZED,
+    ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(patchTasksSchema)
         .or(createErrorSchema(IdParamsSchema)),
@@ -111,6 +128,10 @@ export const remove = createRoute({
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       taskNotFoundSchema,
       TASK_MESSAGES.NOT_FOUND.message,
+    ),
+    [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+      unauthorizedErrorSchema,
+      ZOD_ERROR_MESSAGES.UNAUTHORIZED,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(IdParamsSchema),

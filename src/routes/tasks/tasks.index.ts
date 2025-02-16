@@ -2,8 +2,13 @@ import { createRouter } from "@/lib/create-app";
 
 import * as handlers from "./tasks.handlers";
 import * as routes from "./tasks.routes";
+import { createAuthMiddleware } from "@/middlewares/auth";
 
 const router = createRouter()
+
+router.use('/*', createAuthMiddleware());
+
+router
   .openapi(routes.list, handlers.list)
   .openapi(routes.create, handlers.create)
   .openapi(routes.getOne, handlers.getOne)
