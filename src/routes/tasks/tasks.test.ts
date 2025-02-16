@@ -1,3 +1,5 @@
+//  TODO: Add the authentication tests
+
 /* eslint-disable ts/ban-ts-comment */
 import { testClient } from "hono/testing";
 import { execSync } from "node:child_process";
