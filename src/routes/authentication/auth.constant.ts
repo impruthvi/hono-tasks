@@ -10,4 +10,12 @@ export const AUTH_MESSAGES = {
         message: "Invalid credentials",
         path: ["email", "password"],
     },
+    LOGIN_SUCCESS: {
+        code: "login_success",
+        message: "User logged in successfully",
+    },
+    REGISTER_SUCCESS: {
+        code: "register_success",
+        message: "User registered successfully",
+    },
 };

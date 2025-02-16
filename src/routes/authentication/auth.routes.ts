@@ -31,11 +31,11 @@ export const login = createRoute({
           token: z.string(),
         }),
       }),
-      "Login successful",
+      AUTH_MESSAGES.LOGIN_SUCCESS.message,
     ),
     [HttpStatusCodes.UNAUTHORIZED]: jsonContent(
       createErrorResponseSchema(AUTH_MESSAGES.CREDENTIALS_INVALID),
-      "Invalid credentials",
+      AUTH_MESSAGES.CREDENTIALS_INVALID.message,
     ),
   },
 });
@@ -59,7 +59,7 @@ export const register = createRoute({
           token: z.string(),
         }),
       }),
-      "User registered successfully",
+      AUTH_MESSAGES.REGISTER_SUCCESS.message,
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
       createErrorSchema(insertUsersSchema),

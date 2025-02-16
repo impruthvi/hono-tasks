@@ -5,7 +5,7 @@ import type { AppRouteHandler } from "@/lib/types";
 
 import { LoginRoute, RegisterRoute } from "./auth.routes";
 import { AuthService } from "@/lib/auth-service";
-import { credentialsInvalid } from "./auth.constant";
+import { AUTH_MESSAGES, credentialsInvalid } from "./auth.constant";
 import type { RouteConfigToTypedResponse } from "@hono/zod-openapi";
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
@@ -28,7 +28,7 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
     },
     meta: {
       token,
-      message: "Login successful",
+      message: AUTH_MESSAGES.LOGIN_SUCCESS.message,
     }
   }, HttpStatusCodes.OK);
 
@@ -56,7 +56,7 @@ export const register: AppRouteHandler<RegisterRoute> = async (c) => {
     },
     meta: {
       token,
-      message: "Registration successful",
+      message: AUTH_MESSAGES.REGISTER_SUCCESS.message,
     }
   }, HttpStatusCodes.CREATED);
 }
