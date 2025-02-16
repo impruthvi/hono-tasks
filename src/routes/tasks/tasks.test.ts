@@ -1,5 +1,3 @@
-//  TODO: Add the authentication tests
-
 /* eslint-disable ts/ban-ts-comment */
 import { testClient } from "hono/testing";
 import { execSync } from "node:child_process";
@@ -13,16 +11,43 @@ import createApp from "@/lib/create-app";
 
 import { TASK_MESSAGES } from "./tasks.constants";
 import router from "./tasks.index";
+import authRouter from "@/routes/authentication/auth.index";
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
 }
 
 const client = testClient(createApp().route("/", router));
+const authClient = testClient(createApp().route("/", authRouter));
+let authToken: string | null = null;
 
 describe("tasks routes", () => {
+  const getAuthHeaders = () => ({
+    Authorization: authToken
+  });
   beforeAll(async () => {
     execSync("bun drizzle-kit push");
+
+    const registerResponse = await authClient.register.$post({
+      json: {
+        email: "test@example.com",
+        password: "password123",
+        role: "user",
+      },
+    });
+
+    if (registerResponse.status !== 201) {
+      throw new Error("Failed to register user");
+    }
+
+
+    const data = await registerResponse.json();
+
+    if (registerResponse.status === 201) {
+      authToken = data && data.meta.token;
+    }
+
+
   });
 
   afterAll(async () => {
@@ -30,10 +55,18 @@ describe("tasks routes", () => {
   });
 
   it("post /tasks validates the body when creating", async () => {
+
     const response = await client.tasks.$post({
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
       // @ts-expect-error
       json: {
         done: false,
+      },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
     });
     expect(response.status).toBe(422);
@@ -53,6 +86,10 @@ describe("tasks routes", () => {
         name,
         done: false,
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(201);
     if (response.status === 201) {
@@ -67,6 +104,10 @@ describe("tasks routes", () => {
       query: {
         limit: 10,
         offset: 0,
+      },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
     });
     expect(response.status).toBe(200);
@@ -83,6 +124,10 @@ describe("tasks routes", () => {
         // @ts-expect-error
         id: "wat",
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(422);
     if (response.status === 422) {
@@ -97,6 +142,10 @@ describe("tasks routes", () => {
       param: {
         id: 1000,
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
     expect(response.status).toBe(404);
@@ -110,6 +159,10 @@ describe("tasks routes", () => {
     const response = await client.tasks[":id"].$get({
       param: {
         id,
+      },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
     });
     expect(response.status).toBe(200);
@@ -128,6 +181,10 @@ describe("tasks routes", () => {
       json: {
         name: "",
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(422);
     if (response.status === 422) {
@@ -144,6 +201,10 @@ describe("tasks routes", () => {
         id: "wat",
       },
       json: {},
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(422);
     if (response.status === 422) {
@@ -159,6 +220,10 @@ describe("tasks routes", () => {
         id,
       },
       json: {},
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(422);
     if (response.status === 422) {
@@ -176,6 +241,10 @@ describe("tasks routes", () => {
       json: {
         done: true,
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(200);
     if (response.status === 200) {
@@ -190,6 +259,10 @@ describe("tasks routes", () => {
         // @ts-expect-error
         id: "wat",
       },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
     expect(response.status).toBe(422);
     if (response.status === 422) {
@@ -203,6 +276,10 @@ describe("tasks routes", () => {
     const response = await client.tasks[":id"].$delete({
       param: {
         id,
+      },
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
     });
     expect(response.status).toBe(202);
