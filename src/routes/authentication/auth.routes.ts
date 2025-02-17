@@ -1,11 +1,12 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
+import { createErrorSchema } from "stoker/openapi/schemas";
 
 import { insertUsersSchema, loginUsersSchema, selectUsersSchemaWithoutPassword } from "@/db/schema";
 import { createErrorResponseSchema } from "@/lib/response";
+
 import { AUTH_MESSAGES } from "./auth.constant";
-import { createErrorSchema } from "stoker/openapi/schemas";
 
 const tags = ["Authentication"];
 
@@ -67,7 +68,6 @@ export const register = createRoute({
     ),
   },
 });
-
 
 export type LoginRoute = typeof login;
 export type RegisterRoute = typeof register;

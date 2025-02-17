@@ -1,8 +1,8 @@
 import configureOpenApi from "@/lib/configure-open-api";
 import createApp from "@/lib/create-app";
+import auth from "@/routes/authentication/auth.index";
 import index from "@/routes/index.route";
 import tasks from "@/routes/tasks/tasks.index";
-import auth from "@/routes/authentication/auth.index";
 
 const app = createApp();
 

@@ -71,17 +71,15 @@ export const selectUsersSchemaWithoutPassword = selectUsersSchema.omit({
   password: true,
 });
 
-export const insertUsersSchema = createInsertSchema(users,
-  {
-    email: schema => schema
-      .email({ message: "Invalid email format" }),
-    password: schema => schema
-      .min(8, { message: "Password must be at least 8 characters long" }),
-    role: schema => schema
-      .min(1, { message: "Role must be at least 1 character long" })
-      .max(50, { message: "Role must be at most 50 characters long" }),
-  },
-)
+export const insertUsersSchema = createInsertSchema(users, {
+  email: schema => schema
+    .email({ message: "Invalid email format" }),
+  password: schema => schema
+    .min(8, { message: "Password must be at least 8 characters long" }),
+  role: schema => schema
+    .min(1, { message: "Role must be at least 1 character long" })
+    .max(50, { message: "Role must be at most 50 characters long" }),
+})
   .required({
     role: true,
   })
@@ -91,14 +89,12 @@ export const insertUsersSchema = createInsertSchema(users,
     updatedAt: true,
   });
 
-export const loginUsersSchema = createInsertSchema(users,
-  {
-    email: schema => schema
-      .email({ message: "Invalid email format" }),
-    password: schema => schema
-      .min(8, { message: "Password must be at least 8 characters long" })
-  },
-)
+export const loginUsersSchema = createInsertSchema(users, {
+  email: schema => schema
+    .email({ message: "Invalid email format" }),
+  password: schema => schema
+    .min(8, { message: "Password must be at least 8 characters long" }),
+})
 
   .omit({
     id: true,
@@ -107,6 +103,4 @@ export const loginUsersSchema = createInsertSchema(users,
     role: true,
   });
 
-
 export type User = z.infer<typeof selectUsersSchema>;
-

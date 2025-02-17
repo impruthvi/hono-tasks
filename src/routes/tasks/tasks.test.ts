@@ -8,10 +8,10 @@ import { ZodIssueCode } from "zod";
 import env from "@/env";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import createApp from "@/lib/create-app";
+import authRouter from "@/routes/authentication/auth.index";
 
 import { TASK_MESSAGES } from "./tasks.constants";
 import router from "./tasks.index";
-import authRouter from "@/routes/authentication/auth.index";
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
@@ -22,9 +22,6 @@ const authClient = testClient(createApp().route("/", authRouter));
 let authToken: string | null = null;
 
 describe("tasks routes", () => {
-  const getAuthHeaders = () => ({
-    Authorization: authToken
-  });
   beforeAll(async () => {
     execSync("bun drizzle-kit push");
 
@@ -40,14 +37,11 @@ describe("tasks routes", () => {
       throw new Error("Failed to register user");
     }
 
-
     const data = await registerResponse.json();
 
     if (registerResponse.status === 201) {
       authToken = data && data.meta.token;
     }
-
-
   });
 
   afterAll(async () => {
@@ -55,7 +49,6 @@ describe("tasks routes", () => {
   });
 
   it("post /tasks validates the body when creating", async () => {
-
     const response = await client.tasks.$post({
       headers: {
         Authorization: `Bearer ${authToken}`,
